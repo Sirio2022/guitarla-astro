@@ -1,5 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Post from '../components/post.astro';
+
+const url = `${import.meta.env.PUBLIC_API_URL}/posts?populate=imagen`;
+const respuesta = await fetch(url);
+const { data } = await respuesta.json();
 ---
 
 <Layout
@@ -7,7 +12,21 @@ import Layout from '../layouts/Layout.astro';
   description="GuitarLA - Nuestro Blog. Tienda de instrumentos musicales, guitarras, cursos, blog y más"
 >
   <main class="contenedor">
-    <h1 class="heading">Blog</h1>
+    <h1 class="heading">Nuestro Blog</h1>
+
+    <div class="grid">
+      {
+        data?.map((post) => (
+          <Post
+            titulo={post.attributes.titulo}
+            imagen={post.attributes.imagen.data.attributes.formats.medium.url}
+            contenido={post.attributes.contenido}
+            publishedAt={post.attributes.publishedAt}
+            url={post.attributes.url}
+          />
+        ))
+      }
+    </div>
   </main>
 </Layout>
 
